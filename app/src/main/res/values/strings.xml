@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">LIFE</string>
+
+    <string-array name="venue">
+        <item>Intercon</item>
+        <item>BICC</item>
+        <item>Other</item>
+    </string-array>
+
+</resources>
