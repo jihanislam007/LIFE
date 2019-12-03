@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.telephony.SmsManager;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -30,15 +31,17 @@ public class MainActivity extends AppCompatActivity {
 
     Spinner Spinner;
     TextView DateTV;
-    LinearLayout dateLL;
-    EditText NameET,FaxET;
+    LinearLayout dateLL,
+            VenueLinearLayout,
+            BlankLinearLayout;
+    EditText NameET,FaxET,
+            VenueET;
     Button SubmitButton;
 
-    private DatePickerDialog datePicker;
-    private Calendar calendar;
-    private int year, month, day;
-    private int mYear, mMonth, mDay, mHour, mMinute;
-    String name,fax;
+    private int mYear, mMonth, mDay;
+    String name,fax ;
+    int venue_int = 0;
+    String spinneData;
 
     private static final int MY_PERMISSIONS_REQUEST_SEND_SMS =0 ;
 
@@ -53,6 +56,12 @@ public class MainActivity extends AppCompatActivity {
         dateLL = findViewById(R.id.dateLL);
         NameET =(EditText) findViewById(R.id.NameET);
         FaxET = findViewById(R.id.FaxET);
+
+
+        VenueET = findViewById(R.id.VenueET);
+        VenueLinearLayout = findViewById(R.id.VenueLinearLayout);
+        BlankLinearLayout = findViewById(R.id.BlankLinearLayout);
+
         SubmitButton = findViewById(R.id.SubmitButton);
 
 
@@ -60,6 +69,18 @@ public class MainActivity extends AppCompatActivity {
         List<String> venue = new ArrayList<String>();
         venue.add("INTERCON");
         venue.add("BICC");
+        venue.add("SONARGAO HOTEL");
+        venue.add("LAKE SHORE");
+        venue.add("BASUNDHORA CONV");
+        venue.add("WESTIN");
+        venue.add("GULSHAN CLUB");
+        venue.add("DHAKA CLUB");
+        venue.add("UTTARA CLUB");
+        venue.add("REGENCY HOTEL");
+        venue.add("LE MERIDIAN");
+        venue.add("BRAC INN");
+        venue.add("LA VINCHI");
+        venue.add("KRISHIBID");
         venue.add("OTHER");
 
         // Creating adapter for spinner
@@ -69,32 +90,42 @@ public class MainActivity extends AppCompatActivity {
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         Spinner.setAdapter(dataAdapter);
 
+        // Spinner item selection Listener
+        Spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View v, int position, long id) {
 
-        //////////////date picker////////////////////
+                switch (position) {
+                    case 14:
+                        //  hour_data = 0;
+
+                        BlankLinearLayout.setVisibility(View.GONE);
+                        VenueLinearLayout.setVisibility(View.VISIBLE);
+                        venue_int =1;
+
+                        break;
+
+
+                    default:
+
+                        BlankLinearLayout.setVisibility(View.VISIBLE);
+                        VenueLinearLayout.setVisibility(View.GONE);
+
+                        break;
+
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+               // Toast.makeText(SmsActivity.this, "You did not select Hour", Toast.LENGTH_LONG).show();
+            }
+        });
+
+            //////////////date picker////////////////////
         dateLL.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-/*
-                calendar = Calendar.getInstance();
-
-                *//*String currentdate = DateFormat.getInstance().format(calendar.getTime());
-                DateTV.setText(currentdate);*//*
-
-                day = calendar.get(Calendar.DAY_OF_MONTH);
-                month = calendar.get(Calendar.MONTH);
-                year = calendar.get(Calendar.YEAR);
-
-
-                datePicker = new DatePickerDialog(MainActivity.this, new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-
-
-                        DateTV.setText(dayOfMonth+"/"+(month+1)+"/"+year);
-
-                    }
-                },day,month,year);
-                datePicker.show();*/
 
                 final Calendar c = Calendar.getInstance();
                 mYear = c.get(Calendar.YEAR);
@@ -131,12 +162,23 @@ public class MainActivity extends AppCompatActivity {
                // Toast.makeText(MainActivity.this, "Submit"+name+"\n"+fax+"\n"+String.valueOf(DateTV.getText()), Toast.LENGTH_SHORT).show();
                 name = NameET.getText().toString();
                 fax = FaxET.getText().toString();
+                String   venue = VenueET.getText().toString();
 
                 String phoneNo = "01730012300;" +
                                 "01711425005";
-                String spinneData = String.valueOf(Spinner.getSelectedItem());
+
+                if(venue_int==1){
+
+                    spinneData = "";
+
+                }else{
+
+                    spinneData = String.valueOf(Spinner.getSelectedItem());
+
+                }
+
                 String dateData = String.valueOf(DateTV.getText());
-                String message = spinneData+"\n"+dateData+"\n"+name+"\n"+fax;
+                String message = venue+spinneData+"\n"+dateData+"\n"+name+"\n"+fax;
 
 
                 Intent smsIntent = new Intent(Intent.ACTION_SENDTO);
